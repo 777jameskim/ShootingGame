@@ -43,6 +43,7 @@ public class SpriteAnimation : MonoBehaviour
     public void SetSprite(List<Sprite> sprites, float delay)
     {
         index = 0;
+        delayTimer = delay;
         this.delay = delay;
         this.sprites = sprites.ToList();
     }

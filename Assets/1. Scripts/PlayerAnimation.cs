@@ -18,7 +18,7 @@ public class PlayerAnimation : MonoBehaviour
 
     public float delay;
 
-    Dictionary<PlayerDirection, List<Sprite>> Spritemap;
+    Dictionary<PlayerDirection, List<Sprite>> Spritemap = new Dictionary<PlayerDirection, List<Sprite>>();
 
     // Start is called before the first frame update
     void Start()
@@ -32,26 +32,11 @@ public class PlayerAnimation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(Spritemap.Count);
+
     }
 
     public void SetAnimation(PlayerDirection dir)
     {
         GetComponent<SpriteAnimation>().SetSprite(Spritemap[dir], delay);
     }
-
-    /*
-    public void Idle()
-    {
-        GetComponent<SpriteAnimation>().SetSprite(center, delay);
-    }
-    public void LeftTravel()
-    {
-        GetComponent<SpriteAnimation>().SetSprite(left, delay);
-    }
-    public void RightTravel()
-    {
-        GetComponent<SpriteAnimation>().SetSprite(right, delay);
-    }
-    */
 }

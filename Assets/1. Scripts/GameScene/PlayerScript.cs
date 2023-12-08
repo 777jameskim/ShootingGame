@@ -9,9 +9,9 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float speed = 2;
     [SerializeField] private float delay = 0.2f;
 
-    [SerializeField] private Sprite centersprite;
-    [SerializeField] private Sprite leftsprite;
-    [SerializeField] private Sprite rightsprite;
+    [SerializeField] private GameObject bullet;
+    [SerializeField] private Transform bulletparent;
+    [SerializeField] private float bullettimer;
 
     private int spritemode;
 
@@ -58,6 +58,8 @@ public class PlayerScript : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftArrow))
             newmode--;
         AnimationHandler(newmode);
+        if (Input.GetKey(KeyCode.Space))
+            Shooting();
     }
 
     private void AnimationHandler(int newmode)
@@ -78,5 +80,10 @@ public class PlayerScript : MonoBehaviour
             }
             spritemode = newmode;
         }
+    }
+
+    private void Shooting()
+    {
+        Instantiate(this.bullet, bulletparent);
     }
 }
