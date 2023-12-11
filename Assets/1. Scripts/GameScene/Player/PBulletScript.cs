@@ -5,7 +5,7 @@ using UnityEngine;
 public class PBulletScript : MonoBehaviour
 {
     [SerializeField] private GameObject bullet;
-    [SerializeField] private float Yboundary = 5;
+    [SerializeField] private float boundaryY = 5;
     [SerializeField] private float speed = 10;
     
     // Start is called before the first frame update
@@ -18,7 +18,7 @@ public class PBulletScript : MonoBehaviour
     void Update()
     {
         transform.Translate(Vector2.up * Time.deltaTime * speed);
-        if (transform.position.y > Yboundary)
-            Destroy(bullet);
+        if (transform.position.y > boundaryY)
+            Destroy(gameObject);
     }
 }
