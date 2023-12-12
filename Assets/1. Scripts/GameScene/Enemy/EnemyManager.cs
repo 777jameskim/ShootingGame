@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private EnemyScript[] enemies;
+    [SerializeField] private Transform eBullets;
     [SerializeField] private float spawnDelay;
     private float spawnTimer;
 
@@ -13,6 +14,7 @@ public class EnemyManager : MonoBehaviour
     public GameObject rangeObject;
     BoxCollider2D rangeCollider;
 
+    [SerializeField] private PlayerScript player;
 
     // Start is called before the first frame update
     void Start()
@@ -30,8 +32,9 @@ public class EnemyManager : MonoBehaviour
         {
             spawnTimer = 0;
             int rand = Random.Range(0, enemies.Length);
-            EnemyScript newenemy = Instantiate(enemies[rand], Return_RandomPosition(), Quaternion.identity);
-            newenemy.name = $"Enemy {enemycount}";
+            EnemyScript newEnemy = Instantiate(enemies[rand], Return_RandomPosition(), Quaternion.identity);
+            newEnemy.name = $"Enemy {enemycount}";
+            newEnemy.SetPlayer(player).SetEBullets(eBullets);
             enemycount++;
         }
     }
@@ -48,8 +51,7 @@ public class EnemyManager : MonoBehaviour
         float range_Y = rangeCollider.bounds.size.y;
 
         range_X = Random.Range((range_X / 2) * -1, range_X / 2);
-        range_Y = Random.Range((range_Y / 2) * -1, range_Y / 2);
-        Vector3 RandomPosition = new Vector3(range_X, range_Y, 0f);
+        Vector3 RandomPosition = new Vector3(range_X, 0f, 0f);
 
         Vector3 respawnPosition = originPosition + RandomPosition;
         return respawnPosition;

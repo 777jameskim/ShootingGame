@@ -47,4 +47,9 @@ public class SpriteAnimation : MonoBehaviour
         this.delay = delay;
         this.sprites = sprites.ToList();
     }
+
+    public void OnHIt()
+    {
+
+    }
 }

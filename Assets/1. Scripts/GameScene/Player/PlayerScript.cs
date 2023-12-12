@@ -93,6 +93,7 @@ public class PlayerScript : MonoBehaviour
                 bullettimer = 0;
                 PBulletScript pb = Instantiate(bullet, transform.GetChild(0).position, Quaternion.identity);
                 pb.transform.SetParent(bulletparent);
+                pb.name = "playerbullet";
             }
         }
     }
