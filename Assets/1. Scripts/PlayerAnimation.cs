@@ -27,6 +27,7 @@ public class PlayerAnimation : MonoBehaviour
         Spritemap.Add(PlayerDirection.Left, left);
         Spritemap.Add(PlayerDirection.Right, right);
         GetComponent<SpriteAnimation>().SetSprite(center, delay);
+        GetComponent<SpriteAnimation>().Invincibility(GameParams.invincibleTime);
     }
 
     // Update is called once per frame

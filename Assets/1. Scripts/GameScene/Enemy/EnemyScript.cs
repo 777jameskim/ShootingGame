@@ -1,14 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public abstract class EnemyScript : MonoBehaviour
 {
-    [SerializeField] private EBulletScript bullet;
-    
     protected SpriteRenderer sr;
-    private SpriteAnimation sa;
+    protected SpriteAnimation sa;
     private PlayerScript player;
+
+    [SerializeField] private Sprite[] normalSprites;
+    [SerializeField] private Sprite[] hitSprites;
+    [SerializeField] private Sprite[] deadSprites;
+
+    [SerializeField] private EBulletScript bullet;
 
     private Transform firePosT;
     private Transform bulletparent;
@@ -26,6 +31,7 @@ public abstract class EnemyScript : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         sa = GetComponent<SpriteAnimation>();
         firePosT = transform.GetChild(0);
+        sa.SetSprite(normalSprites.ToList(), 1);
     }
 
     // Update is called once per frame
@@ -69,5 +75,26 @@ public abstract class EnemyScript : MonoBehaviour
         EBulletScript b = Instantiate(bullet, firePosT);
         b.transform.SetParent(bulletparent);
         b.speed = bulletspeed;
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetComponent<PBulletScript>())
+        {
+            sa.SetSprite(hitSprites.ToList(), GameParams.hitBlink,
+                () => {
+                    sa.SetSprite(normalSprites.ToList(), 0.2f);
+                }, false);
+            HP--;
+            Destroy(collision.gameObject);
+        }
+        if (HP == 0)
+        {
+            sa.SetSprite(deadSprites.ToList(), 0.1f,
+                () => {
+                    Destroy(gameObject);
+                }, false);
+            GetComponent<BoxCollider2D>().enabled = false;
+        }
     }
 }

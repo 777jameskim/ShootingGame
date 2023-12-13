@@ -179,10 +179,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351be2e0fea87eb4b84be552b9b963ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normalSprites:
+  - {fileID: 8414478535512612329, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
+  hitSprites:
+  - {fileID: 4326287474489854147, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
+  - {fileID: 4326287474489854147, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
+  deadSprites:
+  - {fileID: 5986030973748356752, guid: 54eba9c24be4c474180c23dcccfd6630, type: 3}
+  - {fileID: -5600206312213581617, guid: 54eba9c24be4c474180c23dcccfd6630, type: 3}
+  - {fileID: 3815954189206336483, guid: 54eba9c24be4c474180c23dcccfd6630, type: 3}
+  - {fileID: -3690502768834906923, guid: 54eba9c24be4c474180c23dcccfd6630, type: 3}
+  - {fileID: -49130668184793455, guid: 54eba9c24be4c474180c23dcccfd6630, type: 3}
+  - {fileID: -2330519403281856691, guid: 54eba9c24be4c474180c23dcccfd6630, type: 3}
   bullet: {fileID: 4125676572976984768, guid: bcda78fff5bb61349bd3d1dc782639bd, type: 3}
-  bulletspeed: 5
-  idleSprite: {fileID: 8414478535512612329, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
-  hitSprite: {fileID: 4326287474489854147, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
 --- !u!114 &1011863091422002376
 MonoBehaviour:
   m_ObjectHideFlags: 0

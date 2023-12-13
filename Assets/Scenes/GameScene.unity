@@ -618,8 +618,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4750392c0406244abd01b0169b2f338, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Xboundary: 2.3
-  Yboundary: 4.5
   speed: 2
   delay: 0.2
   bullet: {fileID: 8419184951374172703, guid: d1037d8bccf18a8419014e0000c13d87, type: 3}

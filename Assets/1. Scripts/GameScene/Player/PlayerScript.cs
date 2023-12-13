@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
-    [SerializeField] private float Xboundary = 2;
-    [SerializeField] private float Yboundary = 2;
-    [SerializeField] private float speed = 2;
-    [SerializeField] private float delay = 0.2f;
+    [SerializeField] private float speed;
+    [SerializeField] private float delay;
 
     [SerializeField] private PBulletScript bullet;
     [SerializeField] private Transform bulletparent;
     [SerializeField] private float bullettimer;
-    [SerializeField] private float bulletdelay = 0.1f;
+    [SerializeField] private float bulletdelay;
 
     private int spritemode;
 
@@ -29,27 +27,27 @@ public class PlayerScript : MonoBehaviour
         {
             transform.position = new Vector3(
                 transform.position.x,
-                Mathf.Clamp(transform.position.y + Time.deltaTime * speed, 0 - Yboundary, Yboundary),
+                Mathf.Clamp(transform.position.y + Time.deltaTime * speed, 0 - GameParams.playerY, GameParams.playerY),
                 0);
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
             transform.position = new Vector3(
                 transform.position.x,
-                Mathf.Clamp(transform.position.y - Time.deltaTime * speed, 0 - Yboundary, Yboundary),
+                Mathf.Clamp(transform.position.y - Time.deltaTime * speed, 0 - GameParams.playerY, GameParams.playerY),
                 0);
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
             transform.position = new Vector3(
-                Mathf.Clamp(transform.position.x + Time.deltaTime * speed, 0 - Xboundary, Xboundary),
+                Mathf.Clamp(transform.position.x + Time.deltaTime * speed, 0 - GameParams.playerX, GameParams.playerX),
                 transform.position.y,
                 0);
         }
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             transform.position = new Vector3(
-                Mathf.Clamp(transform.position.x - Time.deltaTime * speed, 0 - Xboundary, Xboundary),
+                Mathf.Clamp(transform.position.x - Time.deltaTime * speed, 0 - GameParams.playerX, GameParams.playerX),
                 transform.position.y,
                 0);
         }
@@ -93,8 +91,18 @@ public class PlayerScript : MonoBehaviour
                 bullettimer = 0;
                 PBulletScript pb = Instantiate(bullet, transform.GetChild(0).position, Quaternion.identity);
                 pb.transform.SetParent(bulletparent);
-                pb.name = "playerbullet";
             }
         }
+    }
+
+    private bool GetInvincible()
+    {
+        return GetComponent<PlayerAnimation>().GetComponent<SpriteAnimation>().GetInvincible();
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetComponent<EBulletScript>())
+            Debug.Log("player hit!");
     }
 }
