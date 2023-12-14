@@ -12,17 +12,32 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float bullettimer;
     [SerializeField] private float bulletdelay;
 
+    [SerializeField] private Transform lifebar;
+    [SerializeField] private GameObject lifeicon;
+
+    private PlayerAnimation pa;
     private int spritemode;
+    private int HP = GameParams.playerHP;
+    private bool alive = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<PlayerAnimation>().delay = delay;
+        pa = GetComponent<PlayerAnimation>();
+        pa.delay = delay;
+        pa.MakeInvincible();
+        transform.position = GameParams.startPosition;
+        for(int i = 1; i < GameParams.lives; i++)
+        {
+            Instantiate(lifeicon, lifebar);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!alive)
+            return;
         if (Input.GetKey(KeyCode.UpArrow))
         {
             transform.position = new Vector3(
@@ -68,13 +83,13 @@ public class PlayerScript : MonoBehaviour
             switch (newmode)
             {
                 case -1:
-                    GetComponent<PlayerAnimation>().SetAnimation(PlayerDirection.Left);
+                    pa.SetAnimation(PlayerDirection.Left);
                     break;
                 case 1:
-                    GetComponent<PlayerAnimation>().SetAnimation(PlayerDirection.Right);
+                    pa.SetAnimation(PlayerDirection.Right);
                     break;
                 default:
-                    GetComponent<PlayerAnimation>().SetAnimation(PlayerDirection.Center);
+                    pa.SetAnimation(PlayerDirection.Center);
                     break;
             }
             spritemode = newmode;
@@ -97,12 +112,36 @@ public class PlayerScript : MonoBehaviour
 
     private bool GetInvincible()
     {
-        return GetComponent<PlayerAnimation>().GetComponent<SpriteAnimation>().GetInvincible();
+        return pa.invincibleTimer > 0;
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.GetComponent<EBulletScript>())
-            Debug.Log("player hit!");
+        {
+            Destroy(collision.gameObject);
+            if (GetInvincible())
+                return;
+            HP--;
+        }
+        if(HP <= 0)
+        {
+            alive = false;
+            GetComponent<CapsuleCollider2D>().enabled = false;
+            pa.PlayDeathAnimation();
+        }
+    }
+
+    public void Revive()
+    {
+        if (lifebar.childCount <= 0)
+            return;
+        Destroy(lifebar.GetChild(0).gameObject);
+        transform.position = GameParams.startPosition;
+        pa.SetAnimation(PlayerDirection.Center);
+        pa.MakeInvincible();
+        GetComponent<CapsuleCollider2D>().enabled = true;
+        HP = GameParams.playerHP;
+        alive = true;
     }
 }

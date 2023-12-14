@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ItemAnimation : MonoBehaviour
 {
-    [SerializeField] private List<Sprite> sprites;
+    [SerializeField] private Sprite[] sprites;
 
     public float delay;
 

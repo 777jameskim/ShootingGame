@@ -9,15 +9,13 @@ using UnityEngine.Events;
 public class SpriteAnimation : MonoBehaviour
 {
     private SpriteRenderer sr;
-    private List<Sprite> sprites;
+    private Sprite[] sprites;
     private UnityAction action;
 
     private int index;
     private float delay;
     private float delayTimer;
     private bool loop;
-
-    private float invincibleTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -28,7 +26,7 @@ public class SpriteAnimation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (sprites == null || sprites.Count == 0)
+        if (sprites == null || sprites.Length == 0)
             return;
 
         delayTimer += Time.deltaTime;
@@ -40,7 +38,7 @@ public class SpriteAnimation : MonoBehaviour
             sr.sprite = sprites[index];
             index++;
 
-            if (index >= sprites.Count)
+            if (index >= sprites.Length)
                 if(loop)
                     index = 0;
                 else
@@ -54,45 +52,26 @@ public class SpriteAnimation : MonoBehaviour
                         sprites = null;
                 }
         }
-
-        if(invincibleTimer > 0)
-        {
-            invincibleTimer -= Time.deltaTime;
-            if (invincibleTimer % (GameParams.invincibleBlink * 2) > GameParams.invincibleBlink)
-                sr.color = new Color(1f, 1f, 1f, 0.5f);
-            else
-                sr.color = new Color(1f, 1f, 1f, 1f);
-        }
     }
 
-    private void SetData(List<Sprite> sprites, float delay, bool loop = true)
+    private void SetData(Sprite[] sprites, float delay, bool loop = true)
     {
         index = 0;
         delayTimer = delay;
         this.delay = delay;
-        this.sprites = sprites.ToList();
+        this.sprites = sprites;
         this.loop = loop;
         this.action = null;
     }
 
-    public void SetSprite(List<Sprite> sprites, float delay, bool loop = true)
+    public void SetSprite(Sprite[] sprites, float delay, bool loop = true)
     {
         SetData(sprites, delay, loop);
     }
 
-    public void SetSprite(List<Sprite> sprites, float delay, UnityAction action, bool loop = true)
+    public void SetSprite(Sprite[] sprites, float delay, UnityAction action, bool loop = true)
     {
         SetData(sprites, delay, loop);
         this.action = action;
-    }
-
-    public void Invincibility(float time)
-    {
-        this.invincibleTimer = time;
-    }
-
-    public bool GetInvincible()
-    {
-        return invincibleTimer > 0;
     }
 }

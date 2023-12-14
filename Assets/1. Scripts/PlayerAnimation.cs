@@ -12,13 +12,19 @@ public enum PlayerDirection
 
 public class PlayerAnimation : MonoBehaviour
 {
-    [SerializeField] private List<Sprite> center;
-    [SerializeField] private List<Sprite> left;
-    [SerializeField] private List<Sprite> right;
+    [SerializeField] private Sprite[] center;
+    [SerializeField] private Sprite[] left;
+    [SerializeField] private Sprite[] right;
 
+    [SerializeField] private Sprite[] dead;
+
+    private SpriteAnimation sa;
+    private SpriteRenderer sr;
+
+    public float invincibleTimer;
     public float delay;
 
-    Dictionary<PlayerDirection, List<Sprite>> Spritemap = new Dictionary<PlayerDirection, List<Sprite>>();
+    Dictionary<PlayerDirection, Sprite[]> Spritemap = new Dictionary<PlayerDirection, Sprite[]>();
 
     // Start is called before the first frame update
     void Start()
@@ -26,18 +32,37 @@ public class PlayerAnimation : MonoBehaviour
         Spritemap.Add(PlayerDirection.Center, center);
         Spritemap.Add(PlayerDirection.Left, left);
         Spritemap.Add(PlayerDirection.Right, right);
-        GetComponent<SpriteAnimation>().SetSprite(center, delay);
-        GetComponent<SpriteAnimation>().Invincibility(GameParams.invincibleTime);
+        sa = GetComponent<SpriteAnimation>();
+        sr = GetComponent<SpriteRenderer>();
+        sa.SetSprite(center, delay);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (invincibleTimer > 0)
+        {
+            invincibleTimer -= Time.deltaTime;
+            if (invincibleTimer % (GameParams.invincibleBlink * 2) > GameParams.invincibleBlink)
+                sr.color = new Color(1f, 1f, 1f, 0.5f);
+            else
+                sr.color = new Color(1f, 1f, 1f, 1f);
+        }
     }
 
     public void SetAnimation(PlayerDirection dir)
     {
-        GetComponent<SpriteAnimation>().SetSprite(Spritemap[dir], delay);
+        sa.SetSprite(Spritemap[dir], delay);
+    }
+
+    public void PlayDeathAnimation()
+    {
+        sa.SetSprite(dead, 0.1f, () => {
+            GetComponent<PlayerScript>().Revive();
+        }, false);
+    }
+    public void MakeInvincible()
+    {
+        this.invincibleTimer = GameParams.invincibleTime;
     }
 }

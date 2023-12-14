@@ -26,18 +26,21 @@ public abstract class EnemyScript : MonoBehaviour
     protected float fireStartDelay;
     private float fireTimer;
 
+    private bool alive = true;
+
     protected virtual void Initialize()
     {
         sr = GetComponent<SpriteRenderer>();
         sa = GetComponent<SpriteAnimation>();
         firePosT = transform.GetChild(0);
-        sa.SetSprite(normalSprites.ToList(), 1);
+        sa.SetSprite(normalSprites, 1);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Move();
+        if(alive)
+            Move();
         if (player != null)
         {
             FirePosAutoRotate();
@@ -72,29 +75,33 @@ public abstract class EnemyScript : MonoBehaviour
 
     public void Fire()
     {
-        EBulletScript b = Instantiate(bullet, firePosT);
-        b.transform.SetParent(bulletparent);
-        b.speed = bulletspeed;
+        if (alive)
+        {
+            EBulletScript b = Instantiate(bullet, firePosT);
+            b.transform.SetParent(bulletparent);
+            b.speed = bulletspeed;
+        }
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.GetComponent<PBulletScript>())
         {
-            sa.SetSprite(hitSprites.ToList(), GameParams.hitBlink,
+            sa.SetSprite(hitSprites, GameParams.hitBlink,
                 () => {
-                    sa.SetSprite(normalSprites.ToList(), 0.2f);
+                    sa.SetSprite(normalSprites, 0.2f);
                 }, false);
             HP--;
             Destroy(collision.gameObject);
         }
-        if (HP == 0)
+        if (HP <= 0)
         {
-            sa.SetSprite(deadSprites.ToList(), 0.1f,
+            alive = false;
+            GetComponent<CapsuleCollider2D>().enabled = false;
+            sa.SetSprite(deadSprites, 0.1f,
                 () => {
                     Destroy(gameObject);
                 }, false);
-            GetComponent<BoxCollider2D>().enabled = false;
         }
     }
 }
