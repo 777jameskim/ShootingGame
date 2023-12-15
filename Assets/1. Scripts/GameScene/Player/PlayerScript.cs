@@ -12,9 +12,6 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float bullettimer;
     [SerializeField] private float bulletdelay;
 
-    [SerializeField] private Transform lifebar;
-    [SerializeField] private GameObject lifeicon;
-
     private PlayerAnimation pa;
     private int spritemode;
     private int HP = GameParams.playerHP;
@@ -27,10 +24,6 @@ public class PlayerScript : MonoBehaviour
         pa.delay = delay;
         pa.MakeInvincible();
         transform.position = GameParams.startPosition;
-        for(int i = 1; i < GameParams.lives; i++)
-        {
-            Instantiate(lifeicon, lifebar);
-        }
     }
 
     // Update is called once per frame
@@ -130,18 +123,31 @@ public class PlayerScript : MonoBehaviour
             GetComponent<CapsuleCollider2D>().enabled = false;
             pa.PlayDeathAnimation();
         }
+        if (collision.GetComponent<ItemScript>())
+        {
+            collision.GetComponent<ItemScript>().PickUp();
+            Destroy(collision.gameObject);
+        }
     }
 
     public void Revive()
     {
-        if (lifebar.childCount <= 0)
+        UI.Instance.Lives--;
+        if (UI.Instance.Lives <= 0)
+        {
+            GameOver();
             return;
-        Destroy(lifebar.GetChild(0).gameObject);
+        }
         transform.position = GameParams.startPosition;
         pa.SetAnimation(PlayerDirection.Center);
         pa.MakeInvincible();
         GetComponent<CapsuleCollider2D>().enabled = true;
         HP = GameParams.playerHP;
         alive = true;
+    }
+
+    public void GameOver()
+    {
+        Debug.Log("Game Over");
     }
 }

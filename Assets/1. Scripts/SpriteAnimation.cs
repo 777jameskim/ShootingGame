@@ -39,18 +39,20 @@ public class SpriteAnimation : MonoBehaviour
             index++;
 
             if (index >= sprites.Length)
+            {
                 if(loop)
                     index = 0;
                 else
                 {
+                    sprites = null;
+                    sr.sprite = null;
                     if (action != null)
                     {
                         action();
                         action = null;
                     }
-                    else
-                        sprites = null;
                 }
+            }
         }
     }
 

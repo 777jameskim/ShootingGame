@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
+    [SerializeField] private PlayerScript player;
+    [SerializeField] private ItemScript[] items;
     [SerializeField] private EnemyScript[] enemies;
     [SerializeField] private Transform eBullets;
     [SerializeField] private float spawnDelay;
@@ -13,8 +15,6 @@ public class EnemyManager : MonoBehaviour
     // 위에서 언급한 Plane의 자식인 RespawnRange 오브젝트
     public GameObject rangeObject;
     BoxCollider2D rangeCollider;
-
-    [SerializeField] private PlayerScript player;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +34,9 @@ public class EnemyManager : MonoBehaviour
             int rand = Random.Range(0, enemies.Length);
             EnemyScript newEnemy = Instantiate(enemies[rand], Return_RandomPosition(), Quaternion.identity);
             newEnemy.name = $"Enemy {enemycount}";
-            newEnemy.SetPlayer(player).SetEBullets(eBullets);
+            newEnemy.SetPlayer(player)
+                .SetEBullets(eBullets)
+                .SetItems(items);
             enemycount++;
         }
     }

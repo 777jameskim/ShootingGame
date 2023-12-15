@@ -5,9 +5,9 @@ using System.Linq;
 
 public abstract class EnemyScript : MonoBehaviour
 {
-    protected SpriteRenderer sr;
     protected SpriteAnimation sa;
     private PlayerScript player;
+    private ItemScript[] items;
 
     [SerializeField] private Sprite[] normalSprites;
     [SerializeField] private Sprite[] hitSprites;
@@ -30,7 +30,6 @@ public abstract class EnemyScript : MonoBehaviour
 
     protected virtual void Initialize()
     {
-        sr = GetComponent<SpriteRenderer>();
         sa = GetComponent<SpriteAnimation>();
         firePosT = transform.GetChild(0);
         sa.SetSprite(normalSprites, 1);
@@ -66,6 +65,11 @@ public abstract class EnemyScript : MonoBehaviour
         this.player = player;
         return this;
     }
+    public EnemyScript SetItems(ItemScript[] items)
+    {
+        this.items = items;
+        return this;
+    }
 
     public EnemyScript SetEBullets(Transform eBullets)
     {
@@ -98,10 +102,20 @@ public abstract class EnemyScript : MonoBehaviour
         {
             alive = false;
             GetComponent<CapsuleCollider2D>().enabled = false;
+            UI.Instance.Score += GameParams.scoreA;
             sa.SetSprite(deadSprites, 0.1f,
                 () => {
+                    CreateItem();
                     Destroy(gameObject);
                 }, false);
         }
+    }
+
+    void CreateItem()
+    {
+        int rand = Random.Range(0, 100);
+        int index = (rand < 80) ? 0 : (rand < 95) ? 1 : 2;
+
+        Instantiate(items[index], transform.position, Quaternion.identity);
     }
 }
