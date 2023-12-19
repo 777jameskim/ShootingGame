@@ -97,8 +97,8 @@ public class PlayerScript : MonoBehaviour
             if (bullettimer > bulletdelay)
             {
                 bullettimer = 0;
-                PBulletScript pb = Instantiate(bullet, transform.GetChild(0).position, Quaternion.identity);
-                pb.transform.SetParent(bulletparent);
+                PBulletScript pb = Pooling.Instance.PBullet;
+                pb.transform.position = transform.GetChild(0).position;
             }
         }
     }
@@ -112,22 +112,31 @@ public class PlayerScript : MonoBehaviour
     {
         if (collision.GetComponent<EBulletScript>())
         {
-            Destroy(collision.gameObject);
-            if (GetInvincible())
-                return;
-            HP--;
+            Pooling.Instance.EBullet = collision.GetComponent<EBulletScript>();
+            //Destroy(collision.gameObject);
+            Damage();
         }
-        if(HP <= 0)
-        {
-            alive = false;
-            GetComponent<CapsuleCollider2D>().enabled = false;
-            pa.PlayDeathAnimation();
-        }
-        if (collision.GetComponent<ItemScript>())
+        else if (collision.GetComponent<ItemScript>())
         {
             collision.GetComponent<ItemScript>().PickUp();
             Destroy(collision.gameObject);
         }
+    }
+
+    public void Damage()
+    {
+        if (GetInvincible())
+            return;
+        HP--;
+        if (HP <= 0)
+            Death();
+    }
+
+    public void Death()
+    {
+        alive = false;
+        GetComponent<CapsuleCollider2D>().enabled = false;
+        pa.PlayDeathAnimation();
     }
 
     public void Revive()
@@ -136,7 +145,7 @@ public class PlayerScript : MonoBehaviour
         if (UI.Instance.Lives <= 0)
         {
             GameOver();
-            return;
+            //return;
         }
         transform.position = GameParams.startPosition;
         pa.SetAnimation(PlayerDirection.Center);

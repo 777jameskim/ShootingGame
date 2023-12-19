@@ -18,6 +18,13 @@ public class EnemyA : EnemyScript
         fireDelay = 1;
         fireStartDelay = 1;
         bulletspeed = 5;
+        kamikaze = true;
         InvokeRepeating("Fire", fireStartDelay, fireDelay);
+    }
+
+    protected override void Pool()
+    {
+        base.Pool();
+        Pooling.Instance.EnemyA = this;
     }
 }

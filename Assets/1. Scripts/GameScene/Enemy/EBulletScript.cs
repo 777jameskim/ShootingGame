@@ -17,6 +17,6 @@ public class EBulletScript : MonoBehaviour
     {
         transform.Translate(Vector2.down * Time.deltaTime * speed);
         if (GameParams.OutOfBounds(transform))
-            Destroy(gameObject);
+            Pooling.Instance.EBullet = this;
     }
 }

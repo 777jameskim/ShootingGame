@@ -17,6 +17,6 @@ public class PBulletScript : MonoBehaviour
     {
         transform.Translate(Vector2.up * Time.deltaTime * speed);
         if (GameParams.OutOfBounds(transform))
-            Destroy(gameObject);
+            Pooling.Instance.PBullet = this;
     }
 }

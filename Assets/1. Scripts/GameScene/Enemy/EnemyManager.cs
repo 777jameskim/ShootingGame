@@ -11,8 +11,6 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private float spawnDelay;
     private float spawnTimer;
 
-    // 랜덤 스폰 
-    // 위에서 언급한 Plane의 자식인 RespawnRange 오브젝트
     public GameObject rangeObject;
     BoxCollider2D rangeCollider;
 
@@ -22,8 +20,6 @@ public class EnemyManager : MonoBehaviour
         spawnTimer = spawnDelay;
     }
 
-    private int enemycount = 0;
-
     // Update is called once per frame
     void Update()
     {
@@ -32,12 +28,13 @@ public class EnemyManager : MonoBehaviour
         {
             spawnTimer = 0;
             int rand = Random.Range(0, enemies.Length);
-            EnemyScript newEnemy = Instantiate(enemies[rand], Return_RandomPosition(), Quaternion.identity);
-            newEnemy.name = $"Enemy {enemycount}";
+            EnemyScript newEnemy = null;
+            if (enemies[rand].GetComponent<EnemyA>())
+                newEnemy = Pooling.Instance.EnemyA;
+            newEnemy.transform.position = Return_RandomPosition();
             newEnemy.SetPlayer(player)
                 .SetEBullets(eBullets)
                 .SetItems(items);
-            enemycount++;
         }
     }
     private void Awake()
@@ -48,9 +45,7 @@ public class EnemyManager : MonoBehaviour
     Vector3 Return_RandomPosition()
     {
         Vector3 originPosition = rangeObject.transform.position;
-        // 콜라이더의 사이즈를 가져오는 bound.size 사용
         float range_X = rangeCollider.bounds.size.x;
-        float range_Y = rangeCollider.bounds.size.y;
 
         range_X = Random.Range((range_X / 2) * -1, range_X / 2);
         Vector3 RandomPosition = new Vector3(range_X, 0f, 0f);

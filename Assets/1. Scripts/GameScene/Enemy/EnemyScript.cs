@@ -26,19 +26,21 @@ public abstract class EnemyScript : MonoBehaviour
     protected float fireStartDelay;
     private float fireTimer;
 
-    private bool alive = true;
+    private bool alive;
+    protected bool kamikaze;
 
     protected virtual void Initialize()
     {
         sa = GetComponent<SpriteAnimation>();
         firePosT = transform.GetChild(0);
         sa.SetSprite(normalSprites, 1);
+        alive = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(alive)
+        if (alive)
             Move();
         if (player != null)
         {
@@ -81,34 +83,54 @@ public abstract class EnemyScript : MonoBehaviour
     {
         if (alive)
         {
-            EBulletScript b = Instantiate(bullet, firePosT);
-            b.transform.SetParent(bulletparent);
+            EBulletScript b = Pooling.Instance.EBullet;
+            b.transform.position = firePosT.position;
+            b.transform.rotation = firePosT.rotation;
             b.speed = bulletspeed;
         }
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.GetComponent<PBulletScript>())
+        if (collision.GetComponent<PlayerScript>())
         {
-            sa.SetSprite(hitSprites, GameParams.hitBlink,
-                () => {
-                    sa.SetSprite(normalSprites, 0.2f);
-                }, false);
-            HP--;
-            Destroy(collision.gameObject);
+            collision.GetComponent<PlayerScript>().Death();
+            if (kamikaze)
+                Death(true);
         }
+        else if (collision.GetComponent<PBulletScript>())
+        {
+            Pooling.Instance.PBullet = collision.GetComponent<PBulletScript>();
+            Damage();
+        }
+    }
+
+    void Damage()
+    {
+        sa.SetSprite(hitSprites, GameParams.hitBlink,
+            () => {
+                sa.SetSprite(normalSprites, 0.2f);
+            }, false);
+        HP--;
         if (HP <= 0)
-        {
-            alive = false;
-            GetComponent<CapsuleCollider2D>().enabled = false;
-            UI.Instance.Score += GameParams.scoreA;
-            sa.SetSprite(deadSprites, 0.1f,
-                () => {
+            Death();
+    }
+
+    void Death(bool crash = false)
+    {
+        alive = false;
+        GetComponent<CapsuleCollider2D>().enabled = false;
+        UI.Instance.Score += GameParams.scoreA;
+        sa.SetSprite(deadSprites, 0.1f,
+            () => {
+                if (!crash)
                     CreateItem();
-                    Destroy(gameObject);
-                }, false);
-        }
+                Destroy(gameObject);
+            }, false);
+    }
+
+    protected virtual void Pool() { 
+
     }
 
     void CreateItem()
