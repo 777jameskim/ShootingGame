@@ -31,6 +31,8 @@ public class EnemyManager : MonoBehaviour
             EnemyScript newEnemy = null;
             if (enemies[rand].GetComponent<EnemyA>())
                 newEnemy = Pooling.Instance.EnemyA;
+            if (enemies[rand].GetComponent<EnemyB>())
+                newEnemy = Pooling.Instance.EnemyB;
             newEnemy.transform.position = Return_RandomPosition();
             newEnemy.SetPlayer(player)
                 .SetEBullets(eBullets)

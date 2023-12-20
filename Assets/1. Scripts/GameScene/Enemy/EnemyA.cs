@@ -10,13 +10,13 @@ public class EnemyA : EnemyScript
         Initialize();
     }
 
-    protected override void Initialize()
+    public override void Initialize()
     {
         base.Initialize();
         speed = 3;
         HP = 3;
-        fireDelay = 1;
-        fireStartDelay = 1;
+        fireDelay = 1f;
+        fireStartDelay = 1f;
         bulletspeed = 5;
         kamikaze = true;
         InvokeRepeating("Fire", fireStartDelay, fireDelay);
@@ -26,5 +26,10 @@ public class EnemyA : EnemyScript
     {
         base.Pool();
         Pooling.Instance.EnemyA = this;
+    }
+
+    protected override void SetColliderEnabled(bool value)
+    {
+        GetComponent<CapsuleCollider2D>().enabled = value;
     }
 }

@@ -103,7 +103,7 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    private bool GetInvincible()
+    public bool GetInvincible()
     {
         return pa.invincibleTimer > 0;
     }

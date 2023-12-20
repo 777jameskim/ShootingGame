@@ -6,7 +6,7 @@ using System.Linq;
 public abstract class EnemyScript : MonoBehaviour
 {
     protected SpriteAnimation sa;
-    private PlayerScript player;
+    protected PlayerScript player;
     private ItemScript[] items;
 
     [SerializeField] private Sprite[] normalSprites;
@@ -26,14 +26,15 @@ public abstract class EnemyScript : MonoBehaviour
     protected float fireStartDelay;
     private float fireTimer;
 
-    private bool alive;
+    public bool alive;
     protected bool kamikaze;
 
-    protected virtual void Initialize()
+    public virtual void Initialize()
     {
         sa = GetComponent<SpriteAnimation>();
         firePosT = transform.GetChild(0);
         sa.SetSprite(normalSprites, 1);
+        SetColliderEnabled(true);
         alive = true;
     }
 
@@ -43,16 +44,19 @@ public abstract class EnemyScript : MonoBehaviour
         if (alive)
             Move();
         if (player != null)
-        {
             FirePosAutoRotate();
-        }
-        if (transform.position.y < 0 - GameParams.boundaryY)
-            Destroy(gameObject);
+        if (GameParams.OutOfBounds(transform, 1))
+            Pool();
     }
 
-    void Move()
+    protected virtual void Move()
     {
         transform.Translate(Vector2.down * Time.deltaTime * speed);
+    }
+
+    protected virtual void SetColliderEnabled(bool value)
+    {
+        GetComponent<Collider2D>().enabled = value;
     }
 
     void FirePosAutoRotate()
@@ -94,9 +98,12 @@ public abstract class EnemyScript : MonoBehaviour
     {
         if (collision.GetComponent<PlayerScript>())
         {
-            collision.GetComponent<PlayerScript>().Death();
-            if (kamikaze)
-                Death(true);
+            if (!collision.GetComponent<PlayerScript>().GetInvincible())
+            {
+                collision.GetComponent<PlayerScript>().Death();
+                if (kamikaze)
+                    Death(true);
+            }
         }
         else if (collision.GetComponent<PBulletScript>())
         {
@@ -119,17 +126,17 @@ public abstract class EnemyScript : MonoBehaviour
     void Death(bool crash = false)
     {
         alive = false;
-        GetComponent<CapsuleCollider2D>().enabled = false;
+        SetColliderEnabled(false);
         UI.Instance.Score += GameParams.scoreA;
         sa.SetSprite(deadSprites, 0.1f,
             () => {
                 if (!crash)
                     CreateItem();
-                Destroy(gameObject);
+                Pool();
             }, false);
     }
 
-    protected virtual void Pool() { 
+    protected virtual void Pool() {
 
     }
 

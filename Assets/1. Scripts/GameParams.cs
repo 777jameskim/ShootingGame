@@ -4,8 +4,8 @@ using UnityEngine;
 
 static class GameParams
 {
-    public static float boundaryX = 3.5f;
-    public static float boundaryY = 5.5f;
+    public static float boundaryX = 2.8f;
+    public static float boundaryY = 5f;
 
     public static float playerX = 2.3f;
     public static float playerY = 4.5f;
@@ -21,13 +21,27 @@ static class GameParams
     public static float invincibleBlink = 0.05f;
     public static float invincibleTime = 2f;
 
-    public static bool OutOfBounds(Transform t)
+    public static bool OutOfBounds(Transform t, float padding = 0)
     {
-        if (t.position.x > boundaryX
-            || t.position.x < 0 - boundaryX
-            || t.position.y > boundaryY
-            || t.position.y < 0 - boundaryY)
+        if (t.position.x > boundaryX + padding
+            || t.position.x < 0 - boundaryX - padding
+            || t.position.y > boundaryY + padding
+            || t.position.y < 0 - boundaryY - padding)
             return true;
+        return false;
+    }
+
+    public static bool OutOfBounds(Transform t, bool protectEntry, float padding = 0)
+    {
+        if (t.position.x > boundaryX + padding
+            || t.position.x < 0 - boundaryX - padding
+            || t.position.y < 0 - boundaryY - padding)
+            return true;
+        if (!protectEntry)
+        {
+            if (t.position.y > boundaryY + padding)
+                return true;
+        }
         return false;
     }
 }

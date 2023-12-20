@@ -20,6 +20,10 @@ public class Pooling : MonoBehaviour
     [SerializeField] private Transform parentA;
     private List<EnemyA> enemyAList = new List<EnemyA>();
 
+    [SerializeField] private EnemyB enemyB;
+    [SerializeField] private Transform parentB;
+    private List<EnemyB> enemyBList = new List<EnemyB>();
+
     public void Awake()
     {
         Instance = this;
@@ -112,12 +116,46 @@ public class Pooling : MonoBehaviour
                 }
             }
             enemy.gameObject.SetActive(true);
+            enemy.Initialize();
             return enemy;
         }
         set
         {
             value.gameObject.SetActive(false);
             enemyAList.Add(value);
+        }
+    }
+
+    public EnemyB EnemyB
+    {
+        get
+        {
+            if (enemyBList.Count == 0)
+            {
+                EnemyB newenemy = Instantiate(enemyB);
+                newenemy.gameObject.SetActive(false);
+                newenemy.transform.SetParent(parentB);
+                enemyBList.Add(newenemy);
+            }
+
+            EnemyB enemy = null;
+            for (int i = enemyBList.Count - 1; i >= 0; i--)
+            {
+                if (!enemyBList[i].gameObject.activeSelf)
+                {
+                    enemy = enemyBList[i];
+                    enemyBList.RemoveAt(i);
+                    break;
+                }
+            }
+            enemy.gameObject.SetActive(true);
+            enemy.Initialize();
+            return enemy;
+        }
+        set
+        {
+            value.gameObject.SetActive(false);
+            enemyBList.Add(value);
         }
     }
 }
