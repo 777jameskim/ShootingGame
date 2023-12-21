@@ -7,11 +7,9 @@ public class Coin : ItemScript
     public override void Init()
     {
         base.Init();
-        sa.SetSprite(sprites, 0.1f);
-        speed = 3f;
     }
 
-    public override void PickUp()
+    public override void PickUp(PlayerScript player)
     {
         UI.Instance.Score += GameParams.scoreCoin;
     }

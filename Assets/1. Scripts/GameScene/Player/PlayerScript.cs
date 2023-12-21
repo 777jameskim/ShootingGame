@@ -8,14 +8,32 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float delay;
 
     [SerializeField] private PBulletScript bullet;
-    [SerializeField] private Transform bulletparent;
     [SerializeField] private float bullettimer;
     [SerializeField] private float bulletdelay;
+
+    [SerializeField] private SupportScript supportL;
+    [SerializeField] private SupportScript supportR;
 
     private PlayerAnimation pa;
     private int spritemode;
     private int HP = GameParams.playerHP;
     private bool alive = true;
+
+    private int support = 0;
+    private bool supportPriorityLeft = true;
+
+    public int Support
+    {
+        get { return support; }
+        set
+        {
+            if (value >= 0 && value <= 2)
+            {
+                support = value;
+                SupportHandler(value);
+            }
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +42,7 @@ public class PlayerScript : MonoBehaviour
         pa.delay = delay;
         pa.MakeInvincible();
         transform.position = GameParams.startPosition;
+        Support = 0;
     }
 
     // Update is called once per frame
@@ -64,29 +83,69 @@ public class PlayerScript : MonoBehaviour
             newmode++;
         if (Input.GetKey(KeyCode.LeftArrow))
             newmode--;
-        AnimationHandler(newmode);
+        if (newmode != spritemode)
+            AnimationHandler(newmode);
 
         Shooting();
     }
 
     private void AnimationHandler(int newmode)
     {
-        if(newmode != spritemode)
+        switch (newmode)
         {
-            switch (newmode)
-            {
-                case -1:
-                    pa.SetAnimation(PlayerDirection.Left);
-                    break;
-                case 1:
-                    pa.SetAnimation(PlayerDirection.Right);
-                    break;
-                default:
-                    pa.SetAnimation(PlayerDirection.Center);
-                    break;
-            }
-            spritemode = newmode;
+            case -1:
+                pa.SetAnimation(PlayerDirection.Left);
+                break;
+            case 1:
+                pa.SetAnimation(PlayerDirection.Right);
+                break;
+            default:
+                pa.SetAnimation(PlayerDirection.Center);
+                break;
         }
+        spritemode = newmode;
+    }
+
+    private void SupportHandler (int n)
+    {
+        switch (n)
+        {
+            case 1:
+                if (supportPriorityLeft)
+                {
+                    supportL.Active = true;
+                    supportR.Active = false;
+                }
+                else
+                {
+                    supportL.Active = false;
+                    supportR.Active = true;
+                }
+                break;
+            case 2:
+                supportL.Active = true;
+                supportR.Active = true;
+                break;
+            default:
+                supportL.Active = false;
+                supportR.Active = false;
+                break;
+        }
+    }
+
+    private void SupportPriorityToggle()
+    {
+        supportPriorityLeft = !supportPriorityLeft;
+        SupportHandler(support);
+    }
+
+    public void SupportDeath(SupportScript support)
+    {
+        if (support == supportL)
+            supportPriorityLeft = true;
+        if (support == supportR)
+            supportPriorityLeft = false;
+        Support--;
     }
 
     private void Shooting()
@@ -113,12 +172,11 @@ public class PlayerScript : MonoBehaviour
         if (collision.GetComponent<EBulletScript>())
         {
             Pooling.Instance.EBullet = collision.GetComponent<EBulletScript>();
-            //Destroy(collision.gameObject);
             Damage();
         }
         else if (collision.GetComponent<ItemScript>())
         {
-            collision.GetComponent<ItemScript>().PickUp();
+            collision.GetComponent<ItemScript>().PickUp(this);
             Destroy(collision.gameObject);
         }
     }

@@ -14,7 +14,10 @@ static class GameParams
     public static int playerHP = 1;
     public static int lives = 3;
 
+    public static float itemSpeed = 3f;
+
     public static int scoreA = 10;
+    public static int scoreB = 50;
     public static int scoreCoin = 1;
 
     public static float hitBlink = 0.05f;

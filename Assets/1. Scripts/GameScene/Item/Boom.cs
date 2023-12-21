@@ -7,11 +7,9 @@ public class Boom : ItemScript
     public override void Init()
     {
         base.Init();
-        sa.SetSprite(sprites, 0.1f);
-        speed = 3f;
     }
 
-    public override void PickUp()
+    public override void PickUp(PlayerScript player)
     {
         Debug.Log("Boom pickup");
     }

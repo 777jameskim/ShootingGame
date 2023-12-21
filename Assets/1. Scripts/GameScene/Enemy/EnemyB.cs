@@ -13,11 +13,12 @@ public class EnemyB : EnemyScript
     public override void Initialize()
     {
         base.Initialize();
-        speed = 1;
+        speed = 1f;
         HP = 10;
-        fireDelay = 1;
-        fireStartDelay = 1;
-        bulletspeed = 5;
+        score = GameParams.scoreB;
+        fireDelay = 1f;
+        fireStartDelay = 1f;
+        bulletspeed = 5f;
         kamikaze = true;
         InvokeRepeating("Fire", fireStartDelay, fireDelay);
     }
@@ -39,7 +40,6 @@ public class EnemyB : EnemyScript
 
     protected override void Pool()
     {
-        base.Pool();
         Pooling.Instance.EnemyB = this;
     }
 

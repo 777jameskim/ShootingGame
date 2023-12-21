@@ -13,18 +13,18 @@ public class EnemyA : EnemyScript
     public override void Initialize()
     {
         base.Initialize();
-        speed = 3;
+        speed = 3f;
         HP = 3;
+        score = GameParams.scoreA;
         fireDelay = 1f;
         fireStartDelay = 1f;
-        bulletspeed = 5;
+        bulletspeed = 5f;
         kamikaze = true;
         InvokeRepeating("Fire", fireStartDelay, fireDelay);
     }
 
     protected override void Pool()
     {
-        base.Pool();
         Pooling.Instance.EnemyA = this;
     }
 

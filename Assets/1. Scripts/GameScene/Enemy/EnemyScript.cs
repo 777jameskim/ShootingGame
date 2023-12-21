@@ -21,6 +21,7 @@ public abstract class EnemyScript : MonoBehaviour
 
     protected float speed;
     protected int HP { get; set; }
+    protected int score;
 
     protected float fireDelay;
     protected float fireStartDelay;
@@ -127,7 +128,7 @@ public abstract class EnemyScript : MonoBehaviour
     {
         alive = false;
         SetColliderEnabled(false);
-        UI.Instance.Score += GameParams.scoreA;
+        UI.Instance.Score += score;
         sa.SetSprite(deadSprites, 0.1f,
             () => {
                 if (!crash)
@@ -136,14 +137,13 @@ public abstract class EnemyScript : MonoBehaviour
             }, false);
     }
 
-    protected virtual void Pool() {
-
-    }
+    protected abstract void Pool();
 
     void CreateItem()
     {
         int rand = Random.Range(0, 100);
-        int index = (rand < 80) ? 0 : (rand < 95) ? 1 : 2;
+        //int index = (rand < 80) ? 0 : (rand < 95) ? 1 : 2;
+        int index = 1;
 
         Instantiate(items[index], transform.position, Quaternion.identity);
     }

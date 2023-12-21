@@ -151,7 +151,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -183,6 +183,7 @@ MonoBehaviour:
   - {fileID: -49130668184793455, guid: 54eba9c24be4c474180c23dcccfd6630, type: 3}
   - {fileID: -2330519403281856691, guid: 54eba9c24be4c474180c23dcccfd6630, type: 3}
   bullet: {fileID: 4125676572976984768, guid: bcda78fff5bb61349bd3d1dc782639bd, type: 3}
+  alive: 0
 --- !u!114 &1011863091422002376
 MonoBehaviour:
   m_ObjectHideFlags: 0
