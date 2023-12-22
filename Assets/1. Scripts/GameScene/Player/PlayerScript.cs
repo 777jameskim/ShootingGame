@@ -35,6 +35,18 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    private int boom = 0;
+
+    public int Boom
+    {
+        get { return boom; }
+        set
+        {
+            boom = value;
+
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
