@@ -17,7 +17,7 @@ public class PlayerScript : MonoBehaviour
     private PlayerAnimation pa;
     private int spritemode;
     private int HP = GameParams.playerHP;
-    private bool alive = true;
+    public bool alive = true;
 
     private int support = 0;
     private bool supportPriorityLeft = true;
@@ -86,7 +86,10 @@ public class PlayerScript : MonoBehaviour
         if (newmode != spritemode)
             AnimationHandler(newmode);
 
-        Shooting();
+        Fire();
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+            SupportPriorityToggle();
     }
 
     private void AnimationHandler(int newmode)
@@ -142,13 +145,13 @@ public class PlayerScript : MonoBehaviour
     public void SupportDeath(SupportScript support)
     {
         if (support == supportL)
-            supportPriorityLeft = true;
-        if (support == supportR)
             supportPriorityLeft = false;
+        if (support == supportR)
+            supportPriorityLeft = true;
         Support--;
     }
 
-    private void Shooting()
+    private void Fire()
     {
         bullettimer += Time.deltaTime;
         if (Input.GetKey(KeyCode.Space))
@@ -158,6 +161,10 @@ public class PlayerScript : MonoBehaviour
                 bullettimer = 0;
                 PBulletScript pb = Pooling.Instance.PBullet;
                 pb.transform.position = transform.GetChild(0).position;
+                if (supportL.Active)
+                    supportL.Fire();
+                if (supportR.Active)
+                    supportR.Fire();
             }
         }
     }
@@ -205,6 +212,7 @@ public class PlayerScript : MonoBehaviour
             GameOver();
             //return;
         }
+        Support = 0;
         transform.position = GameParams.startPosition;
         pa.SetAnimation(PlayerDirection.Center);
         pa.MakeInvincible();

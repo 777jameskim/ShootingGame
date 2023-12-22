@@ -17,10 +17,9 @@ public class EnemyB : EnemyScript
         HP = 10;
         score = GameParams.scoreB;
         fireDelay = 1f;
-        fireStartDelay = 1f;
+        fireTimer = fireDelay - 1f;
         bulletspeed = 5f;
         kamikaze = true;
-        InvokeRepeating("Fire", fireStartDelay, fireDelay);
     }
 
     protected override void Move()

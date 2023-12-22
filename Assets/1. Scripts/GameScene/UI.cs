@@ -10,6 +10,7 @@ public class UI : MonoBehaviour
 
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text livesText;
+    [SerializeField] private TMP_Text boomText;
     private int score;
     public int Score
     {

@@ -35,7 +35,6 @@ public class EnemyManager : MonoBehaviour
                 newEnemy = Pooling.Instance.EnemyB;
             newEnemy.transform.position = Return_RandomPosition();
             newEnemy.SetPlayer(player)
-                .SetEBullets(eBullets)
                 .SetItems(items);
         }
     }

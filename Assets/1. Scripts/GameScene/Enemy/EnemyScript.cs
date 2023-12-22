@@ -16,7 +16,6 @@ public abstract class EnemyScript : MonoBehaviour
     [SerializeField] private EBulletScript bullet;
 
     private Transform firePosT;
-    private Transform bulletparent;
     protected float bulletspeed;
 
     protected float speed;
@@ -24,8 +23,7 @@ public abstract class EnemyScript : MonoBehaviour
     protected int score;
 
     protected float fireDelay;
-    protected float fireStartDelay;
-    private float fireTimer;
+    protected float fireTimer;
 
     public bool alive;
     protected bool kamikaze;
@@ -44,10 +42,12 @@ public abstract class EnemyScript : MonoBehaviour
     {
         if (alive)
             Move();
-        if (player != null)
+        if (player.alive)
             FirePosAutoRotate();
         if (GameParams.OutOfBounds(transform, 1))
             Pool();
+
+        Fire();
     }
 
     protected virtual void Move()
@@ -78,16 +78,12 @@ public abstract class EnemyScript : MonoBehaviour
         return this;
     }
 
-    public EnemyScript SetEBullets(Transform eBullets)
-    {
-        this.bulletparent = eBullets;
-        return this;
-    }
-
     public void Fire()
     {
-        if (alive)
+        fireTimer += Time.deltaTime;
+        if (alive && fireTimer > fireDelay)
         {
+            fireTimer = 0;
             EBulletScript b = Pooling.Instance.EBullet;
             b.transform.position = firePosT.position;
             b.transform.rotation = firePosT.rotation;
@@ -142,8 +138,8 @@ public abstract class EnemyScript : MonoBehaviour
     void CreateItem()
     {
         int rand = Random.Range(0, 100);
-        //int index = (rand < 80) ? 0 : (rand < 95) ? 1 : 2;
-        int index = 1;
+        int index = (rand < 80) ? 0 : (rand < 95) ? 1 : 2;
+        //int index = 1;
 
         Instantiate(items[index], transform.position, Quaternion.identity);
     }
